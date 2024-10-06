@@ -6,6 +6,7 @@ import com.gustavo.escala.repositories.PessoaRepository;
 import com.gustavo.escala.services.exceptions.DataIntegrityViolationException;
 import com.gustavo.escala.services.exceptions.ObjectNotFoundExcpetion;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -16,7 +17,8 @@ public class PessoaService {
 
     @Autowired
     private PessoaRepository repository;
-
+    @Autowired
+    private BCryptPasswordEncoder encoder;
     public Pessoa findById(Integer id){
         Optional<Pessoa> obj = repository.findById(id);
 
@@ -29,6 +31,7 @@ public class PessoaService {
 
     public Pessoa create(PessoaDTO objDTO) {
         objDTO.setId(null);
+        objDTO.setSenha(encoder.encode(objDTO.getSenha()));
         validaPorCpfEmail(objDTO);
         Pessoa newObj = new Pessoa(objDTO);
         return repository.save(newObj);

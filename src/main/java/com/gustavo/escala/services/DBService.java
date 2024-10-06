@@ -8,6 +8,7 @@ import com.gustavo.escala.repositories.EquipeRepository;
 import com.gustavo.escala.repositories.EscalaRepository;
 import com.gustavo.escala.repositories.PessoaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -23,15 +24,17 @@ public class DBService {
     private EscalaRepository escalaRepository;
     @Autowired
     private EquipeRepository equipeRepository;
+    @Autowired
+    private BCryptPasswordEncoder encoder;
 
     public void instanciaDB(){
-        Pessoa pessoa = new Pessoa(null, "13608035052", "Gustavo Martins", "gustavo_mf1@hotmail.com", "123");
+        Pessoa pessoa = new Pessoa(null, "13608035052", "Gustavo Martins", "gustavo_mf1@hotmail.com", encoder.encode("123"));
         pessoa.addPerfis(Perfil.ADMIN);
 
-        Pessoa pessoa2 = new Pessoa(null, "15684242057", "Bianca bento", "bianca_mf1@hotmail.com", "123");
+        Pessoa pessoa2 = new Pessoa(null, "15684242057", "Bianca bento", "bianca_mf1@hotmail.com", encoder.encode("123"));
         pessoa2.addPerfis(Perfil.FUNCIONARIO);
 
-        Pessoa pessoa3 = new Pessoa(null, "15999242057", "Zezin silva", "zezin_mf1@hotmail.com", "123");
+        Pessoa pessoa3 = new Pessoa(null, "15999242057", "Zezin silva", "zezin_mf1@hotmail.com", encoder.encode("123"));
         pessoa3.addPerfis(Perfil.FUNCIONARIO);
 
         Equipe equipe = new Equipe(null, "Charle");
@@ -45,8 +48,8 @@ public class DBService {
         LocalDate data = LocalDate.parse("20-09-2024", formatter);
 
         Escala escala = new Escala(null, data, equipe, "Transporte de preso", "Levar preso até apucarana");
-        Escala escala2 = new Escala(null, data, null, "SLA SLA SLA", "Eu não sei.");
-
+        Escala escala2 = new Escala(null, data, equipe2, "SLA SLA SLA", "Eu não sei.");
+        escala2.addPessoaExtra(pessoa3);
         equipeRepository.saveAll(Arrays.asList(equipe, equipe2));
         pessoaRepository.saveAll(Arrays.asList(pessoa, pessoa2, pessoa3));
         escalaRepository.saveAll(Arrays.asList(escala, escala2));
