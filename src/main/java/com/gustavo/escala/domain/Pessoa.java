@@ -55,10 +55,10 @@ public class   Pessoa implements Serializable {
         addPerfis(Perfil.FUNCIONARIO);
     }
 
-    public Pessoa(PessoaDTO obj) {
+    public Pessoa(PessoaDTO obj, Equipe equipe) {
         this.id = obj.getId();
         this.cpf = obj.getCpf();
-        this.equipe = obj.getEquipe();
+        this.equipe = equipe;
         this.nome = obj.getNome();
         this.email = obj.getEmail();
         this.senha = obj.getSenha();
@@ -149,4 +149,6 @@ public class   Pessoa implements Serializable {
     public int hashCode() {
         return Objects.hash(id, cpf);
     }
+
+
 }

@@ -1,11 +1,13 @@
 package com.gustavo.escala.dtos;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.gustavo.escala.domain.Equipe;
 import com.gustavo.escala.domain.Escala;
 import com.gustavo.escala.domain.Pessoa;
 import com.gustavo.escala.domain.enums.Perfil;
 import jakarta.validation.constraints.NotNull;
+import org.hibernate.validator.constraints.br.CPF;
 
 import java.io.Serializable;
 import java.time.LocalDate;
@@ -17,9 +19,10 @@ public class PessoaDTO implements Serializable {
     private static final long serialVersionUID = 1L;
 
     private Integer id;
+
     @NotNull(message = "O campo CPF é requerido")
     private String cpf;
-    private Equipe equipe;
+    private Integer idEquipe;
     @NotNull(message = "O campo NOME é requerido")
     private String nome;
     @NotNull(message = "O campo EMAIL é requerido")
@@ -31,6 +34,8 @@ public class PessoaDTO implements Serializable {
 
     @JsonFormat(pattern = "dd/MM/yyyy")
     private LocalDate dataCriacao = LocalDate.now();
+
+    @JsonIgnore
     private Set<Escala> escalasExtras = new HashSet<>();
 
     public PessoaDTO(){
@@ -41,7 +46,7 @@ public class PessoaDTO implements Serializable {
     public PessoaDTO(Pessoa obj) {
         this.id = obj.getId();
         this.cpf = obj.getCpf();
-        this.equipe = obj.getEquipe();
+        this.idEquipe = obj.getEquipe().getId();
         this.nome = obj.getNome();
         this.email = obj.getEmail();
         this.senha = obj.getSenha();
@@ -112,11 +117,11 @@ public class PessoaDTO implements Serializable {
         this.escalasExtras = escalasExtras;
     }
 
-    public Equipe getEquipe() {
-        return equipe;
+    public Integer getIdEquipe() {
+        return idEquipe;
     }
 
-    public void setEquipe(Equipe equipe) {
-        this.equipe = equipe;
+    public void setIdEquipe(Integer idEquipe) {
+        this.idEquipe = idEquipe;
     }
 }

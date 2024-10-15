@@ -1,9 +1,7 @@
 package com.gustavo.escala.domain;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.HashSet;
@@ -16,22 +14,24 @@ public class Escala implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    @JsonFormat(pattern = "dd/MM/yyyy")
+
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate data;
+
     @ManyToOne
     @JoinColumn(name = "equipe_id")
-    @JsonIgnore
     private Equipe equipe;
+
     private String titulo;
     private String descricao;
 
-    @JsonIgnore
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "escala_pessoa_extra",
             joinColumns = @JoinColumn(name = "escala_id"),
             inverseJoinColumns = @JoinColumn(name = "pessoa_id"))
     private Set<Pessoa> pessoasExtras = new HashSet<>();
 
+    // Construtores, Getters e Setters
     public Escala() {
         super();
     }

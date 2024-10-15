@@ -33,21 +33,20 @@ public class EscalaResource {
         List<EscalaDTO> listDTO = list.stream().map(obj -> new EscalaDTO(obj)).collect(Collectors.toList());
         return ResponseEntity.ok().body(listDTO);
     }
-    @PreAuthorize("hasAnyRole('ADMIN')")
+
     @PostMapping
     public ResponseEntity<EscalaDTO> create(@Valid @RequestBody EscalaDTO objDTO){
         Escala obj = service.create(objDTO);
         URI uri = ServletUriComponentsBuilder.fromCurrentRequestUri().path("/{id}").buildAndExpand(obj.getId()).toUri();
         return ResponseEntity.created(uri).build();
     }
-    @PreAuthorize("hasAnyRole('ADMIN')")
+
     @PutMapping(value = "/{id}")
     public ResponseEntity<EscalaDTO> update(@PathVariable Integer id,@Valid @RequestBody EscalaDTO objDTO){
         Escala newObj = service.update(id, objDTO);
         return ResponseEntity.ok().body(new EscalaDTO(newObj));
     }
 
-    @PreAuthorize("hasAnyRole('ADMIN')")
     @DeleteMapping(value = "/{id}")
     public ResponseEntity<EscalaDTO> delete(@PathVariable Integer id){
         service.delete(id);

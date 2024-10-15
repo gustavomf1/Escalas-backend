@@ -3,7 +3,6 @@ package com.gustavo.escala.dtos;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.gustavo.escala.domain.Escala;
 import com.gustavo.escala.domain.Pessoa;
-import jakarta.persistence.Index;
 import jakarta.validation.constraints.NotNull;
 
 import java.io.Serializable;
@@ -14,20 +13,23 @@ import java.util.stream.Collectors;
 
 public class EscalaDTO implements Serializable {
     private static final long serialVersionUID = 1L;
-
     private Integer id;
-    @JsonFormat(pattern = "dd/MM/yyyy")
+
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private LocalDate data;
 
-    @NotNull(message = "O campo EQUIPE requerido")
+    @NotNull(message = "O campo EQUIPE é requerido")
     private Integer equipe;
     private String nomeEquipe;
-    @NotNull(message = "O campo TITULO requerido")
+
+    @NotNull(message = "O campo TITULO é requerido")
     private String titulo;
-    @NotNull(message = "O campo DESCRIÇÃO requerido")
+
+    @NotNull(message = "O campo DESCRIÇÃO é requerido")
     private String descricao;
 
-    private Set<Integer> pessoasExtras = new HashSet<>();
+    private Set<Integer> pessoasExtrasIds = new HashSet<>();
+    private Set<String> pessoasExtrasNomes = new HashSet<>();
 
     public EscalaDTO() {
         super();
@@ -40,9 +42,11 @@ public class EscalaDTO implements Serializable {
         this.nomeEquipe = obj.getEquipe().getNome();
         this.titulo = obj.getTitulo();
         this.descricao = obj.getDescricao();
-        this.pessoasExtras = obj.getPessoasExtras().stream().map(x -> x.getId()).collect(Collectors.toSet());
+        this.pessoasExtrasIds = obj.getPessoasExtras().stream().map(Pessoa::getId).collect(Collectors.toSet());
+        this.pessoasExtrasNomes = obj.getPessoasExtras().stream().map(Pessoa::getNome).collect(Collectors.toSet());
     }
 
+    // Getters e Setters...
     public Integer getId() {
         return id;
     }
@@ -91,11 +95,19 @@ public class EscalaDTO implements Serializable {
         this.descricao = descricao;
     }
 
-    public Set<Integer> getPessoasExtras() {
-        return pessoasExtras;
+    public Set<Integer> getPessoasExtrasIds() {
+        return pessoasExtrasIds;
     }
 
-    public void setPessoasExtras(Set<Integer> pessoasExtras) {
-        this.pessoasExtras = pessoasExtras;
+    public void setPessoasExtrasIds(Set<Integer> pessoasExtrasIds) {
+        this.pessoasExtrasIds = pessoasExtrasIds;
+    }
+
+    public Set<String> getPessoasExtrasNomes() {
+        return pessoasExtrasNomes;
+    }
+
+    public void setPessoasExtrasNomes(Set<String> pessoasExtrasNomes) {
+        this.pessoasExtrasNomes = pessoasExtrasNomes;
     }
 }

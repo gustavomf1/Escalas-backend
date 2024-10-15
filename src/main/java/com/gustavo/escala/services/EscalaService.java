@@ -16,16 +16,19 @@ import java.util.Optional;
 
 @Service
 public class EscalaService {
+
     @Autowired
     private EscalaRepository repository;
+
     @Autowired
     private EquipeService equipeService;
+
     @Autowired
     private PessoaRepository pessoaRepository;
 
-    public Escala findById(Integer id){
+    public Escala findById(Integer id) {
         Optional<Escala> obj = repository.findById(id);
-        return obj.orElseThrow(() -> new ObjectNotFoundExcpetion("Objeto não econtrado! ID: " + id));
+        return obj.orElseThrow(() -> new ObjectNotFoundExcpetion("Objeto não encontrado! ID: " + id));
     }
 
     public List<Escala> findAll() {
@@ -33,7 +36,8 @@ public class EscalaService {
     }
 
     public Escala create(@Valid EscalaDTO objDTO) {
-        return repository.save(newEscala(objDTO));
+        Escala escala = newEscala(objDTO);
+        return repository.save(escala);
     }
 
     public Escala update(Integer id, EscalaDTO objDTO) {
@@ -43,23 +47,23 @@ public class EscalaService {
         return repository.save(updatedObj);
     }
 
-    private Escala newEscala(EscalaDTO obj){
+    private Escala newEscala(EscalaDTO obj) {
         Equipe equipe = equipeService.findById(obj.getEquipe());
-
         Escala escala = new Escala();
-        if(obj.getId() != null){
+        if (obj.getId() != null) {
             escala.setId(obj.getId());
         }
-
         escala.setDescricao(obj.getDescricao());
         escala.setEquipe(equipe);
         escala.setTitulo(obj.getTitulo());
         escala.setData(obj.getData());
 
-        List<Pessoa> pessoasExtras = pessoaRepository.findAllById(obj.getPessoasExtras());
-
-        // Adicionar cada Pessoa na Escala
-        pessoasExtras.forEach(escala::addPessoaExtra);
+        // Adiciona cada pessoa extra usando o método addPessoaExtra
+        obj.getPessoasExtrasIds().forEach(id -> {
+            Pessoa pessoa = pessoaRepository.findById(id)
+                    .orElseThrow(() -> new ObjectNotFoundExcpetion("Pessoa não encontrada! ID: " + id));
+            escala.addPessoaExtra(pessoa);
+        });
 
         return escala;
     }
